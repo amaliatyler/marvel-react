@@ -1,5 +1,7 @@
-import './charList.scss';
 import { Component } from 'react';
+import PropTypes from 'prop-types';
+
+import './charList.scss';
 import MarvelService from '../../services/MarvelService';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
@@ -25,6 +27,7 @@ class CharList extends Component {
         this.onCharListLoading();
         this.marvelService
         .getAllCharacters(offset)
+        /* onCharListLoaded принимает в себя массив charlist */
         .then(this.onCharListLoaded)
         .catch(this.onError)
     }
@@ -114,6 +117,10 @@ class CharList extends Component {
             </div>
         )
     }
+}
+
+CharList.propTypes = {
+    onCharSelected: PropTypes.func.isRequired
 }
 
 export default CharList;
