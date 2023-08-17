@@ -127,3 +127,5 @@ CharInfo.propTypes = {
 };
 
 export default CharInfo;
+
+
