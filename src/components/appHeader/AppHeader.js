@@ -6,7 +6,6 @@ const AppHeader = () => {
             <h1 className="app__title">
                 <a href="#">
                     <span>Marvel</span> information portal
-                    <span>Hello!</span>
                 </a>
             </h1>
             <nav className="app__menu">
