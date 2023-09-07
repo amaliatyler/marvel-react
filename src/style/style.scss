@@ -97,3 +97,24 @@ main {
     color: #9f0013;
 
 }
+
+.not-found {
+    &_img {
+        width: 300px;
+        height: auto;
+        margin: 0 auto;
+        display: block;
+        margin-bottom: 50px;
+    }
+
+    &_lnk {
+        display: block;
+    }
+
+    &_txt, &_lnk {
+        text-align: center;
+        font-family: inherit;
+        font-weight: bold;
+        font-size: 20px;
+    }
+}
