@@ -38,8 +38,6 @@ const CharList = (props) => {
     setCharEnded((charEnded) => ended);
   };
 
-  console.log('charlist!')
-
   const itemRefs = useRef([]);
 
   const focusOnItem = (id) => {
@@ -96,7 +94,6 @@ const CharList = (props) => {
 
   const errorMessage = error ? <ErrorMessage /> : null;
   const spinner = loading  && !newItemsLoading ? <Spinner /> : null;
-  
 
   return (
     <div className="char__list">
