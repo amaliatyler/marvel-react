@@ -10,6 +10,15 @@ const useMarvelService  = () => {
   
   const _baseOffset = 606;
 
+  const getResource = async (url) => {
+    let res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+    }
+
+    return await res.json();
+  };
   
 
   const getAllCharacters = async (offset = _baseOffset) => {
@@ -23,6 +32,16 @@ const useMarvelService  = () => {
     const res = await request(`${_apiBase}characters/${id}?${_apiKey}`);
     return _transformCharacter(res.data.results[0]);
   };
+
+  const searchForCharacter = async (name) => {
+    const res = await request(
+      `${_apiBase}characters?name=${name}&${_apiKey}`
+    );
+    console.log(_transformCharacter(res.data.results[0]))
+    return _transformCharacter(res.data.results[0]);
+  }
+
+
 
   const _transformCharacter = (char) => {
     return {
@@ -60,7 +79,7 @@ const useMarvelService  = () => {
     }
   }
 
-  return { loading, error, getAllCharacters, getCharacter, clearError, getAllComics, getComic };
+  return { loading, error, getAllCharacters, getCharacter, clearError, getAllComics, getComic, searchForCharacter };
 
 }
 
