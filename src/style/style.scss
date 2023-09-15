@@ -1,6 +1,6 @@
-@import './variables';
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
-@import './button';
+@import "./variables";
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap");
+@import "./button";
 
 * {
     font-family: "Roboto Condensed", sans-serif;
@@ -44,7 +44,7 @@ p {
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
-    margin: 0; 
+    margin: 0;
 }
 
 .app {
@@ -66,18 +66,18 @@ main {
 }
 
 .pulse {
-    animation: pulse 1.5s ease-in-out .5s infinite
+    animation: pulse 1.5s ease-in-out 0.5s infinite;
 }
 
 @keyframes pulse {
     0% {
-        opacity: 1
+        opacity: 1;
     }
     50% {
-        opacity: .4
+        opacity: 0.4;
     }
     100% {
-        opacity: 1
+        opacity: 1;
     }
 }
 
@@ -90,12 +90,11 @@ main {
 }
 
 .no-img {
-    object-fit:contain;
+    object-fit: contain;
 }
 
 ._active {
     color: #9f0013;
-
 }
 
 .not-found {
@@ -111,10 +110,21 @@ main {
         display: block;
     }
 
-    &_txt, &_lnk {
+    &_txt,
+    &_lnk {
         text-align: center;
         font-family: inherit;
         font-weight: bold;
         font-size: 20px;
+    }
+}
+
+.success {
+    display: flex;
+    justify-content: space-between;
+    &__title {
+        color: #03710e;
+        font-size: 18px;
+        font-weight: 700;
     }
 }
