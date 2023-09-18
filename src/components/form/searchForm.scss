@@ -29,9 +29,27 @@
         width: 100%;
     }
 
-    &__error {
-        color: #9f0013;
-        font-size: 18px;
-        font-weight: 700;
+    .error-img {
+        display: none;
+    }
+}
+
+.char {
+    &__search {
+        &-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        &-success {
+            color: #03710e;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        &-error {
+            color: #9f0013;
+            font-size: 18px;
+            font-weight: 700;
+        }
     }
 }
