@@ -10,12 +10,11 @@ import { Link } from "react-router-dom";
 
 import useMarvelService from "../../services/MarvelService";
 import ErrorMessage from "../errorMessage/ErrorMessage";
-
 import "./searchForm.scss";
 
 const SearchForm = () => {
     const [char, setChar] = useState(null);
-    const { loading, error, getCharacterByName, clearError } =
+    const { getCharacterByName, clearError, process, setProcess } =
         useMarvelService();
 
     const onCharLoaded = (char) => {
@@ -26,15 +25,11 @@ const SearchForm = () => {
         clearError();
 
         getCharacterByName(name)
-        .then(onCharLoaded);
+        .then(onCharLoaded)
+        .then(() => setProcess('confirmed'));
     };
 
-    const errorMessage = error ? (
-        <div className="char__search-critical-error">
-            <ErrorMessage />
-        </div>
-    ) : null;
-
+    const errorMessage = process === 'error' ? <div className="char__search-critical-error"><ErrorMessage /></div> : null;
     const results = !char ? null : char.length > 0 ? 
         <div className="char__search-wrapper">
             <div className="char__search-success">
@@ -82,7 +77,7 @@ const SearchForm = () => {
                         <button 
                             className="button button__main" 
                             type="submit"
-                            disabled={loading}
+                            disabled={process === 'loading'}
                             >
                             <div className="inner">Find</div>
                         </button>

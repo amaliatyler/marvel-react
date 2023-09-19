@@ -1,10 +1,30 @@
 import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 
-import "./comicsList.scss";
 import useMarvelService from "../../services/MarvelService";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
+
+import "./comicsList.scss";
+
+const setContent = (process, Component, newItemsLoading) => {
+  switch (process) {
+      case 'waiting':
+          return <Spinner />;
+          break;
+      case 'loading':
+          return newItemsLoading ? <Component /> :<Spinner /> ;
+          break;
+      case 'confirmed':
+          return <Component />;
+          break;
+      case 'error':
+          return <ErrorMessage />;
+          break;
+      default:
+          throw new Error('Unexpected process state');
+  }
+};
 
 const ComicsList = () => {
   const [comicsList, setComicsList] = useState([]);
@@ -12,7 +32,7 @@ const ComicsList = () => {
   const [offset, setOffset] = useState(532);
   const [comicsListEnded, setComicsListEnded] = useState(false);
 
-  const { loading, error, getAllComics } = useMarvelService();
+  const { loading, error, getAllComics, process, setProcess } = useMarvelService();
 
   useEffect(() => {
     onRequest(offset, true);
@@ -22,7 +42,8 @@ const ComicsList = () => {
     initial ? setNewItemsLoading(false) : setNewItemsLoading(true);
     getAllComics(offset)
       /* onCharListLoaded принимает в себя массив charlist */
-      .then(onComicsListLoaded);
+      .then(onComicsListLoaded)
+      .then(() => setProcess('confirmed'));;
   };
 
   const onComicsListLoaded = (newComicsList) => {
@@ -57,15 +78,9 @@ const ComicsList = () => {
     return <ul className="comics__grid">{items}</ul>;
   }
 
-  const items = renderItems(comicsList);
-  const errorMessage = error ? <ErrorMessage /> : null;
-  const spinner = loading && !newItemsLoading ? <Spinner /> : null;
-
   return (
     <div className="comics__list">
-      {errorMessage}
-      {spinner}
-      {items}
+      {setContent(process, () => renderItems(comicsList), newItemsLoading)}
       <button
         disabled={newItemsLoading}
         style={{ display: comicsListEnded ? "none" : "block" }}
