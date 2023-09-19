@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo  } from 'react';
 import PropTypes from 'prop-types';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
@@ -11,16 +12,12 @@ const setContent = (process, Component, newItemsLoading) => {
     switch (process) {
         case 'waiting':
             return <Spinner />;
-            break;
         case 'loading':
-            return newItemsLoading ? <Component /> :<Spinner /> ;
-            break;
+            return newItemsLoading ? <Component /> : <Spinner />;
         case 'confirmed':
             return <Component />;
-            break;
         case 'error':
             return <ErrorMessage />;
-            break;
         default:
             throw new Error('Unexpected process state');
     }
@@ -37,6 +34,7 @@ const CharList = (props) => {
     /* useEffect запускается после рендера, поэтому мы можем вызвать функцию "до" ее создания */
     useEffect(() => {
         onRequest(offset, true);
+        // eslint-disable-next-line
     }, []);
 
     const onRequest = (offset, initial) => {
@@ -47,16 +45,16 @@ const CharList = (props) => {
             .then(() => setProcess('confirmed'));
     };
 
-    const onCharListLoaded = (newCharList) => {
+    const onCharListLoaded = async (newCharList) => {
         let ended = false;
         if (newCharList.length < 9) {
             ended = true;
         }
 
-        setCharList((charList) => [...charList, ...newCharList]);
-        setNewItemsLoading((newItemsLoading) => false);
-        setOffset((offset) => offset + 9);
-        setCharEnded((charEnded) => ended);
+        setCharList([...charList, ...newCharList]);
+        setNewItemsLoading(false);
+        setOffset(offset + 9);
+        setCharEnded(ended);
     };
 
     const itemRefs = useRef([]);
@@ -69,9 +67,6 @@ const CharList = (props) => {
         itemRefs.current[id].focus();
     };
 
-    /* этот метод создан для оптимизации, 
-    чтобы не помещать такую конструкцию в метод render */
-
     function renderItems(arr) {
         const items = arr.map((item, i) => {
             let imgStyle = { objectFit: 'cover' };
@@ -83,41 +78,44 @@ const CharList = (props) => {
             }
 
             return (
-                <li
-                    key={item.id}
-                    onClick={() => {
-                        props.onCharSelected(item.id);
-                        focusOnItem(i);
-                    }}
-                    onKeyPress={(e) => {
-                        if (e.key === ' ' || e.key === 'Enter') {
-                            e.preventDefault();
+                <CSSTransition key={item.id} timeout={500} classNames="char__item">
+                    <li 
+                        className="char__item"
+                        tabIndex={0}
+                        ref={el => itemRefs.current[i] = el}
+                        onClick={() => {
                             props.onCharSelected(item.id);
                             focusOnItem(i);
-                        }
-                    }}
-                    className="char__item"
-                    tabIndex={0}
-                    /* коллбэк-реф принимает в себя единственным аргументом тот элемент, на котором он был вызван */
-                    ref={(el) => (itemRefs.current[i] = el)}
-                >
-                    <img
-                        src={item.thumbnail}
-                        alt={item.title}
-                        style={imgStyle}
-                    />
-                    <div className="char__name">{item.name}</div>
-                </li>
+                        }}
+                        onKeyPress={(e) => {
+                            if (e.key === ' ' || e.key === "Enter") {
+                                props.onCharSelected(item.id);
+                                focusOnItem(i);
+                            }
+                        }}>
+                            <img src={item.thumbnail} alt={item.name} style={imgStyle}/>
+                            <div className="char__name">{item.name}</div>
+                    </li>
+                </CSSTransition>
             );
         });
 
         // А эта конструкция вынесена для центровки спиннера/ошибки
-        return <ul className="char__grid">{items}</ul>;
+        return (
+            <ul className="char__grid">
+                <TransitionGroup component={null}>{items}</TransitionGroup>
+            </ul>
+        );
     }
+
+    const elements = useMemo(() => {
+        return setContent(process, () => renderItems(charList), newItemsLoading);
+        // eslint-disable-next-line
+    }, [process])
 
     return (
         <div className="char__list">
-            {setContent(process, () => renderItems(charList), newItemsLoading)}
+            {elements}
             <button
                 disabled={newItemsLoading}
                 style={{ display: charEnded ? 'none' : 'block' }}

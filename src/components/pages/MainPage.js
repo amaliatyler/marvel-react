@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { Helmet } from "react-helmet";
+import { useState } from 'react';
+import { Helmet } from 'react-helmet';
 
-import CharList from "../charList/CharList";
-import CharInfo from "../charInfo/CharInfo";
-import RandomChar from "../randomChar/RandomChar";
-import ErrorBoundary from "../errorBoundary/ErrorBoundary";
+import CharList from '../charList/CharList';
+import CharInfo from '../charInfo/CharInfo';
+import RandomChar from '../randomChar/RandomChar';
+import ErrorBoundary from '../errorBoundary/ErrorBoundary';
 
-import decoration from "../../resources/img/vision.png";
-import SearchForm from "../form/SearchForm";
+import decoration from '../../resources/img/vision.png';
+import SearchForm from '../form/SearchForm';
 
 const MainPage = () => {
     const [selectedChar, setChar] = useState(null);
@@ -19,9 +19,7 @@ const MainPage = () => {
     return (
         <>
             <Helmet>
-                <meta 
-                  name="description" 
-                  content="Marvel information portal" />
+                <meta name="description" content="Marvel information portal" />
                 <title>Marvel information portal</title>
             </Helmet>
             <ErrorBoundary>
